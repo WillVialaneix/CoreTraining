@@ -1,21 +1,22 @@
 package com.example.coretraining
 
 import android.content.Intent
+import android.media.AudioManager
+import android.media.ToneGenerator
+import android.media.ToneGenerator.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import kotlinx.android.synthetic.main.activity_chronometer.*
-import kotlinx.android.synthetic.main.activity_main.*
 
 class Chronometer : AppCompatActivity() {
     private lateinit var countDownTimer: CountDownTimer
     var countdownRunning = false
     private var startTimeMs: Long = Workout.lengthSeconds.toLong() * 1000
     var mTimeLeftInMillis = startTimeMs
+    private var toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 200)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,10 +56,14 @@ class Chronometer : AppCompatActivity() {
     }
 
     private fun startTimer() {
+        toneGen1.startTone(TONE_CDMA_PIP, 150)
         countDownTimer = object : CountDownTimer(mTimeLeftInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 mTimeLeftInMillis = millisUntilFinished
                 updateCountDownText()
+                val timeLeftInSec = (mTimeLeftInMillis / 1000).toInt()
+                if (timeLeftInSec % 5 == 0)
+                    toneGen1.startTone(TONE_CDMA_ABBR_INTERCEPT, 150)
             }
 
             override fun onFinish() {
