@@ -1,6 +1,8 @@
 package com.example.coretraining
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.media.ToneGenerator.*
@@ -9,6 +11,8 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.activity_chronometer.*
 
 class Chronometer : AppCompatActivity() {
@@ -21,6 +25,8 @@ class Chronometer : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chronometer)
+        val layout = findViewById<ConstraintLayout>(R.id.full_chronometer)
+        layout?.background = resources.getDrawable(R.color.colorReset, resources.newTheme())
 
         startButton?.setOnClickListener {
             if (countdownRunning) {
@@ -57,6 +63,8 @@ class Chronometer : AppCompatActivity() {
 
     private fun startTimer() {
         toneGen1.startTone(TONE_CDMA_PIP, 150)
+        val layout = findViewById<ConstraintLayout>(R.id.full_chronometer)
+        layout?.background = resources.getDrawable(R.color.colorStart, resources.newTheme())
         countDownTimer = object : CountDownTimer(mTimeLeftInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 mTimeLeftInMillis = millisUntilFinished
@@ -77,10 +85,14 @@ class Chronometer : AppCompatActivity() {
     private fun pauseTimer() {
         countDownTimer.cancel()
         countdownRunning = false
+        val layout = findViewById<ConstraintLayout>(R.id.full_chronometer)
+        layout?.background = resources.getDrawable(R.color.colorPause, resources.newTheme())
     }
     private fun resetTimer() {
         mTimeLeftInMillis = startTimeMs
         updateCountDownText()
+        val layout = findViewById<ConstraintLayout>(R.id.full_chronometer)
+        layout?.background = resources.getDrawable(R.color.colorReset, resources.newTheme())
     }
     private fun updateCountDownText() {
         val minutes = (mTimeLeftInMillis / 1000).toInt() / 60
